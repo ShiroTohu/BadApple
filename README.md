@@ -6,8 +6,8 @@ currently also no way to save video's frames so that you don't have to render th
 ```ffmpeg -i video.mp4 audio.mp3```
 
 ## images
-![example image 1](images/image1.jpg)
-![example image 2](images/image2.jpg)
+![example image 1](images/image1.JPG)
+![example image 2](images/image2.JPG)
 
 ## requirements
 - pygame
