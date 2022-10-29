@@ -45,7 +45,7 @@ class Video():
 # renders the entire video
 class PreRender():
     # starts the PreRender process
-    def __init__(self, video : Video, coloums = 60, scale = 0.43):
+    def __init__(self, video : Video, coloums = 80, scale = 0.43): # ! to change resolution change the amount of coloums not the scale!
         self.frames = []
         self.amount_of_frames = len(self.frames)
         self.coloums = coloums
