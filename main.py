@@ -1,19 +1,18 @@
 from PIL import Image
 from tqdm import tqdm
 from colorama import just_fix_windows_console
+from source.FileHandler import FileHandler # use later
 
+import argparse
 import numpy as np
 import pygame
 import os
 import sys
 
-just_fix_windows_console()
-pygame.init()
-gscale1 = "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\|()1{}[]?-_+~<>i!lI;:,\"^`'. "[::-1]
-
 class Video():
     # initiates the Files class with file variables
-    def __init__(self, directory = "video/", prefix = "out", filetype = ".png", music_path = "video/audio.mp3", fps = 30):
+    def __init__(self, directory = "output/", prefix = "out", filetype = ".png", music_path = "output/audio.mp3", fps = 30):
+        # Information about the Music Video.
         self.music_path = music_path
         self.directory = directory
         self.prefix = prefix
@@ -45,8 +44,8 @@ class Video():
 # renders the entire video
 class PreRender():
     # starts the PreRender process
-    def __init__(self, video : Video, coloums = 80, scale = 0.43): # ! to change resolution change the amount of coloums not the scale!
-        self.frames = []
+    def __init__(self, video : Video, coloums = 80, scale = 0.43): # ! to change resolution, change the amount of coloums not the scale!
+        self.frames = [] # where the video frames are stored
         self.amount_of_frames = len(self.frames)
         self.coloums = coloums
         self.scale = scale # The scale is used to find out the how many rows there should be in terms of height
@@ -147,5 +146,24 @@ class Renderer(PreRender):
         sys.stdout.flush()
 
 if __name__ == "__main__":
-    video = Video(directory = "video/", prefix = "out", filetype = ".png", music_path = "video/audio.mp3", fps = 30) # ! change video settings here
+    # Argparse
+    parser = argparse.ArgumentParser(description = "Takes a Video and outputs it as ASCII text supports file reading and writing.")
+    parser.add_argument('video', help='either a JSON save file or a video that is a mp4, mov etc... (include video extension or .json)')
+    parser.add_argument('--fps', type=int, help = 'the fps of the video')
+    parser.add_argument("-v", "--verbosity", action="count", default=0, help="increase output verbosity, goes up to 2, default set to 0")
+
+    parser.add_argument('--audio', help='the name of the audio file')
+    parser.add_argument('--image_prefix', help='the prefix before the image frame, default is set to "out", generally doesn\'t really need to be changed')
+    parser.add_argument('--image_filetype', help='filetype of the images that are rendered')
+    parser.add_argument('-o', '--output', help = 'Where the picture files and audio are outputted to')
+
+    parser.add_argument('--clear_render_chache', help='program stores the JSON files of already rendered videos so that they can tone down render times.')
+
+    args = parser.parse_args()
+
+    just_fix_windows_console()
+    pygame.init()
+    gscale1 = "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\|()1{}[]?-_+~<>i!lI;:,\"^`'. "[::-1]
+
+    video = Video(directory = "output/", prefix = "out", filetype = ".png", music_path = "output/audio.mp3", fps = 30) # ! change video settings here
     Renderer(video)

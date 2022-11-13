@@ -4,3 +4,5 @@ out.txt
 test.py
 .git/
 refactortime.py
+output/
+__pycache__
