@@ -1,13 +1,15 @@
 from PIL import Image
 from tqdm import tqdm
 from colorama import just_fix_windows_console
-from source.FileHandler import FileHandler # use later
+from file_handler import FileHandler
 
 import argparse
 import numpy as np
 import pygame
 import os
 import sys
+
+__author__ = "ShiroTohu"
 
 class Video():
     # initiates the Files class with file variables
@@ -19,7 +21,6 @@ class Video():
         self.filetype = filetype
         self.fps = fps
 
-        # TODO I rather have audio stuff seperate from the video class, though there is a loophole that stops me from doing so. and it looks messy asf
         self.images_to_render = self.images_to_render()
         self.amount_of_frames = len(self.images_to_render)
         self.time_between_frames = (1000 / self.fps) # records it in miliseconds
@@ -54,8 +55,11 @@ class PreRender():
         for image in tqdm(self.video.images_to_render):
             self.frames.append(self.render_image(image))
 
+        FileHandler.save_frames(self.frames, )
+
     # renders image as ASCII, copy and pasted from geeks for geeks because too hard to read
     def render_image(self, image_path):
+        gscale1 = "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\|()1{}[]?-_+~<>i!lI;:,\"^`'. "[::-1]
         image = Image.open(image_path).convert('L')
         # store dimensions
         W, H = image.size[0], image.size[1]
@@ -145,10 +149,10 @@ class Renderer(PreRender):
         sys.stdout.write(f"\033[1;1f{frame}")
         sys.stdout.flush()
 
-if __name__ == "__main__":
+def main(): # I hope this works...
     # Argparse
     parser = argparse.ArgumentParser(description = "Takes a Video and outputs it as ASCII text supports file reading and writing.")
-    parser.add_argument('video', help='either a JSON save file or a video that is a mp4, mov etc... (include video extension or .json)')
+    # parser.add_argument('video', help='either a JSON save file or a video that is a mp4, mov etc... (include video extension or .json)')
     parser.add_argument('--fps', type=int, help = 'the fps of the video')
     parser.add_argument("-v", "--verbosity", action="count", default=0, help="increase output verbosity, goes up to 2, default set to 0")
 
@@ -163,7 +167,10 @@ if __name__ == "__main__":
 
     just_fix_windows_console()
     pygame.init()
-    gscale1 = "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\|()1{}[]?-_+~<>i!lI;:,\"^`'. "[::-1]
 
     video = Video(directory = "output/", prefix = "out", filetype = ".png", music_path = "output/audio.mp3", fps = 30) # ! change video settings here
     Renderer(video)
+
+# for debugging purposes
+if __name__ == "__main__":
+    pass

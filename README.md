@@ -9,20 +9,16 @@ Keep in mind that the program takes in audio.mp3 and out*number*.png, any other 
 unless specified changed in the code. As you can see there are alot of manual labour needed to produce
 the required outcome therefore:
 
+- [x] output video as ASCII Text
 - [ ] mp4 input program arguments
 - [ ] JSON save feature (to reduce loading times)
 - [ ] settings
 
+## Package Requirements
+To install the packages required to run the program you'll need to install the dependencies needed to run the program which can be installed with:
+
+```pip install -r REQUIREMENTS.txt```
+
 ## Sample Images
 <img src="images/image1.JPG" alt="example image 1" width="700"/>
 <img src="images/image2.JPG" alt="example image 2" width="700"/>
-
-## Package Requirements
-You will need ffmpeg to run ASCII Player and to convert the images, you'll also have to add it to the path. Hopefully I didn't forget to commit REQUIREMENTS.txt, you can install the required packages using pip and REQUIREMENTS.txt. Here are the packages you will need:
-
-- pygame
-- PIL
-- tqdm
-- colorama
-- numpy
-
