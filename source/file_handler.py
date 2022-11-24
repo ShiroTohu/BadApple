@@ -13,10 +13,10 @@ class FileHandler():
     def save_video(frames: list, name: str, audio: str) -> None:
         # creates and checks cache folder
         #! I'm sure there has to be a better way but this is here for now
-        if not (os.path.exists("cache")):
+        if not (os.path.exists("../cache")):
             os.mkdir("../cache")
 
-        if not (os.path.exists(f"cache/{name}")):
+        if not (os.path.exists(f"../cache/{name}")):
             os.mkdir(f"../cache/{name}")
 
         # saves video information to frames.json
