@@ -12,14 +12,20 @@ class File:
         self.full_file_path = full_file_path
         self.file_name = self.get_file_name()
         self.stripped_file_name = self.get_stripped_name(self.name)
+        self.file_type = self.get_file_type(self.name)
 
+    # TODO: this is not clean code, it's like... terrible code lmao, hard to read
     @staticmethod
     def get_file_name(full_file_path):
         return os.path.basename(full_file_path).split('/')[-1]
 
     @staticmethod
-    def get_stripped_name(full_file_path):
-        return full_file_path.split('.')[-1]
+    def get_stripped_name(file_name):
+        return file_name[:file_name.index('.' + file_name('.')[-1])]
+
+    @staticmethod
+    def get_file_type(file_name):
+        return '.' + file_name.split('.')[-1]
 
 class VideoToOutput(File):
     # named argument file instead of video so to not confuse with the Video class
