@@ -20,7 +20,7 @@ To install the packages required to run the program you'll need to install the d
 
 ```pip install -r REQUIREMENTS.txt```
 
-keep in mind that ASCII Video player makes no effort in installing FFmpeg as that is entirely user dependent. You can download FFmpeg [here](https://ffmpeg.org/),
+Keep in mind that ASCII Video player makes no effort in installing FFmpeg as that is entirely user dependent. You can download FFmpeg [here](https://ffmpeg.org/),
 keep in mind to add FFmpeg to the ```$PATH``` variable in the system environment.
 
 ## Sample Images

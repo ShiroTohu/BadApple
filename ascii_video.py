@@ -2,6 +2,7 @@ __author__ = "ShiroTohu"
 
 # TODO: ------------------------------------
 # You need to check python's new way of modularisation.
+# basically refactor all of the method names because all of them suck
 
 from source.main import main
 

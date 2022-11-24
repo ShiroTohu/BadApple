@@ -3,3 +3,4 @@ PIL
 tqdm
 colorama
 numpy
+ffmpeg-python

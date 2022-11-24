@@ -1,7 +1,9 @@
 from PIL import Image
 from tqdm import tqdm
 from colorama import just_fix_windows_console
+
 from file_handler import FileHandler
+from video_processing import VideoToOutput
 
 import argparse
 import numpy as np
@@ -13,14 +15,15 @@ __author__ = "ShiroTohu"
 
 # Stores information about the output of the Video, this might get a bit complicated
 # TODO implement video processing.py
-class Video():
+class Video(VideoToOutput):
     # initiates the Files class with file variables
-    def __init__(self, directory = "output/", prefix = "out", filetype = ".png", music_path = "output/audio.mp3", fps = 30):
+    def __init__(self, video_path, music_path = "output/audio.mp3", fps = 30):
+        VideoToOutput.__init__(video_path)
         # Information about the Music Video.
         self.music_path = music_path
-        self.directory = directory
-        self.prefix = prefix
-        self.filetype = filetype
+        self.directory = "output/"
+        self.prefix = "out"
+        self.filetype = ".png"
         self.fps = fps
 
         self.images_to_render = self.images_to_render()
@@ -37,12 +40,15 @@ class Video():
         return pygame.mixer.music.get_pos()
 
     # returns a list of images to render in directory form, that is why it is in the Files class
+    #! Depreciated replace by get_metadata()
+    """
     def images_to_render(self) -> list:
         number_of_frames = len(os.listdir(self.directory))
         to_render = []
         for number in range(number_of_frames - 2): # TODO please fix!
             to_render.append(f"{self.directory}{self.prefix}{number + 1}{self.filetype}")
         return to_render
+    """
 
 # renders the entire video
 class PreRender():
@@ -156,7 +162,7 @@ class Renderer(PreRender):
         sys.stdout.write(f"\033[1;1f{frame}")
         sys.stdout.flush()
 
-def main(): # I hope this works...
+def program_arguments():
     # Argparse
     parser = argparse.ArgumentParser(description = "Takes a Video and outputs it as ASCII text supports file reading and writing.")
     # parser.add_argument('video', help='either a JSON save file or a video that is a mp4, mov etc... (include video extension or .json)')
@@ -172,10 +178,12 @@ def main(): # I hope this works...
 
     args = parser.parse_args()
 
+def main(): # I hope this works...
+    # TODO merge program arguments into main() lololololol
     just_fix_windows_console()
     pygame.init()
 
-    video = Video(directory = "output/", prefix = "out", filetype = ".png", music_path = "output/audio.mp3", fps = 30) # ! change video settings here
+    video = Video(music_path = "output/audio.mp3", fps = 30) # ! change video settings here
     Renderer(video)
 
 # for debugging purposes
