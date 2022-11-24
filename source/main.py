@@ -17,8 +17,8 @@ __author__ = "ShiroTohu"
 # TODO implement video processing.py
 class Video(VideoToOutput):
     # initiates the Files class with file variables
-    def __init__(self, video_path, music_path = "output/audio.mp3", fps = 30):
-        VideoToOutput.__init__(video_path)
+    def __init__(self, full_file_path, music_path = "output/audio.mp3", fps = 30):
+        VideoToOutput.__init__(full_file_path)
         # Information about the Music Video.
         self.music_path = music_path
         self.directory = "output/"

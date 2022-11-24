@@ -4,15 +4,16 @@
 
 import os
 import ffmpeg
+from pprint import pprint
 
 __author__ = "ShiroTohu"
 
 class File:
     def __init__ (self, full_file_path):
         self.full_file_path = full_file_path
-        self.file_name = self.get_file_name()
-        self.stripped_file_name = self.get_stripped_name(self.name)
-        self.file_type = self.get_file_type(self.name)
+        self.file_name = self.get_file_name(full_file_path)
+        self.stripped_file_name = self.get_stripped_name(self.file_name)
+        self.filetype = self.get_filetype(self.file_name)
 
     # TODO: this is not clean code, it's like... terrible code lmao, hard to read
     @staticmethod
@@ -21,20 +22,20 @@ class File:
 
     @staticmethod
     def get_stripped_name(file_name):
-        return file_name[:file_name.index('.' + file_name('.')[-1])]
+        return file_name[:file_name.index('.' + file_name.split('.')[-1])]
 
     @staticmethod
-    def get_file_type(file_name):
+    def get_filetype(file_name):
         return '.' + file_name.split('.')[-1]
 
 class VideoToOutput(File):
     # named argument file instead of video so to not confuse with the Video class
     # takes in the full file path to specified video.
     def __init__(self, full_file_path):
-        File.__init__(full_file_path)
+        File.__init__(self, full_file_path)
         self.output_folder = "../output2/"
         self.full_file_path = full_file_path
-        self.metadata = self.get_metadata(full_file_path)
+        self.metadata = self.get_metadata()
 
         self.frame_rate = self.get_framerate()
         # vairables for full_path, file, file_name
@@ -50,7 +51,7 @@ class VideoToOutput(File):
 
     def get_framerate(self) -> int:
         frame_rate = self.metadata["r_frame_rate"]
-        return int(frame_rate[:-(len(frame_rate) - frame_rate.index("//"))]) # instead of 30/1 it returns just 30, because we know that most videos that are inputted are in frames per second not frames per 30 minutesloloololoplo
+        return int(frame_rate[:-(len(frame_rate) - frame_rate.index("/"))]) # instead of 30/1 it returns just 30, because we know that most videos that are inputted are in frames per second not frames per 30 minutesloloololoplo
 
     # strips .mp4 off the end of the str given
     def strip_file_extension(file) -> "str":
@@ -58,12 +59,11 @@ class VideoToOutput(File):
         return file_name
 
     # this is here because it has to deal with the actual video itself not the JSON curd the Video class hasn to deal with.
-    @staticmethod
-    def get_metadata(full_file_path) -> dict:
-        video_metadata = ffmpeg.probe(full_file_path)["streams"][0] # here for readability
+    def get_metadata(self) -> dict:
+        video_metadata = ffmpeg.probe(self.full_file_path)["streams"][0] # here for readability
         return video_metadata
 
 if __name__ == "__main__":
     x = VideoToOutput("D:\\Mine\\Programming\\BadApple\\output\\test.mp4")
-    metadata = x.get_metadata()[0]
-
+    metadata = x.get_metadata()
+    pprint(metadata)

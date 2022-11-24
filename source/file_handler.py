@@ -20,7 +20,7 @@ class FileHandler():
             os.mkdir(f"../cache/{name}")
 
         # saves video information to frames.json
-        with open(f"../cache/{name}/frames.json", "w") as file_destination: #? consider modularising??!?? :/
+        with open(f"../cache/{name}/frames.json", "w") as file_destination:
             video_information = {
                 "name": name, 
                 "audio": audio,
