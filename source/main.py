@@ -11,6 +11,8 @@ import sys
 
 __author__ = "ShiroTohu"
 
+# Stores information about the output of the Video, this might get a bit complicated
+# TODO implement video processing.py
 class Video():
     # initiates the Files class with file variables
     def __init__(self, directory = "output/", prefix = "out", filetype = ".png", music_path = "output/audio.mp3", fps = 30):
@@ -45,6 +47,7 @@ class Video():
 # renders the entire video
 class PreRender():
     # starts the PreRender process
+    # Takes in Video instance as seen above, and the coloums and scale of said video.
     def __init__(self, video : Video, coloums = 80, scale = 0.43): # ! to change resolution, change the amount of coloums not the scale!
         self.frames = [] # where the video frames are stored
         self.amount_of_frames = len(self.frames)
