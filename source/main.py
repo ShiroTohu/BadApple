@@ -139,11 +139,15 @@ class Renderer(PreRender):
             input("play: ")
             os.system('cls')
             self.video.play_music()
-            next_frame = self.video.time_between_frames
-            for frame in self.frames:
-                while self.video.audio_position() < next_frame:
-                    self.print_frame(frame)
-                next_frame += self.video.time_between_frames
+            self.render_loop()
+
+    # shows the frames in in sync with the music, method added for modularisation
+    def render_loop(self):
+        next_frame = self.video.time_between_frames
+        for frame in self.frames:
+            while self.video.audio_position() < next_frame:
+                self.print_frame(frame)
+            next_frame += self.video.time_between_frames
 
     def print_frame(self, frame):
         sys.stdout.write(f"\033[1;1f{frame}")

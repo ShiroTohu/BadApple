@@ -9,7 +9,8 @@ Keep in mind that the program takes in audio.mp3 and out*number*.png, any other 
 unless specified changed in the code. As you can see there are alot of manual labour needed to produce
 the required outcome therefore:
 
-- [x] output video as ASCII Text
+- [x] output video as ASCII text
+- [ ] autoconversion to ASCII text
 - [ ] mp4 input program arguments
 - [ ] JSON save feature (to reduce loading times)
 - [ ] settings
