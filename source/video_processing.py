@@ -15,11 +15,11 @@ class File:
 
     @staticmethod
     def get_file_name(full_file_path):
-        pass
+        return os.path.basename(full_file_path).split('/')[-1]
 
     @staticmethod
     def get_stripped_name(full_file_path):
-        return
+        return full_file_path.split('.')[-1]
 
 class VideoToOutput(File):
     # named argument file instead of video so to not confuse with the Video class
