@@ -10,9 +10,9 @@ unless specified changed in the code. As you can see there are alot of manual la
 the required outcome therefore:
 
 - [x] output video as ASCII text
-- [ ] autoconversion to ASCII text
+- [x] autoconversion to ASCII text
 - [ ] mp4 input program arguments
-- [ ] JSON save feature (to reduce loading times)
+- [x] JSON save feature (to reduce loading times)
 - [ ] settings
 
 ## Package Requirements

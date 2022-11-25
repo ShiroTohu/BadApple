@@ -10,7 +10,7 @@ __author__ = "ShiroTohu"
 
 class FileHandler():
     # creates the required folders and files to store the video for later use.
-    def save_video(frames: list, name: str, audio: str) -> None:
+    def save_video(frames: list, name: str, coloums: int, scale: int) -> None:
         # creates and checks cache folder
         #! I'm sure there has to be a better way but this is here for now
         if not (os.path.exists("../cache")):
@@ -23,7 +23,7 @@ class FileHandler():
         with open(f"../cache/{name}/frames.json", "w") as file_destination:
             video_information = {
                 "name": name, 
-                "audio": audio,
+                "audio": "audio.mp3", #TODO: please change this in the future, or just think about the implications of what this means.
                 "coloums": coloums,
                 "scale": scale,
                 "frames": frames}
