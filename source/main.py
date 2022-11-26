@@ -2,8 +2,8 @@ from PIL import Image
 from tqdm import tqdm
 from colorama import just_fix_windows_console
 
-from file_handler import FileHandler
-from video_processing import VideoToOutput
+from source.file_handler import FileHandler
+from source.video_processing import VideoToOutput
 
 import argparse
 import numpy as np
@@ -155,15 +155,7 @@ def program_arguments():
     # Argparse
     parser = argparse.ArgumentParser(description = "Takes a Video and outputs it as ASCII text supports file reading and writing.")
     parser.add_argument('video', help='either a JSON save file or a video that is a mp4, mov etc... (include video extension or .json)')
-    parser.add_argument('--fps', type=int, help = 'the fps of the video')
     parser.add_argument("-v", "--verbosity", action="count", default=0, help="increase output verbosity, goes up to 2, default set to 0")
-
-    parser.add_argument('--audio', help='the name of the audio file')
-    parser.add_argument('--image_prefix', help='the prefix before the image frame, default is set to "out", generally doesn\'t really need to be changed')
-    parser.add_argument('--image_filetype', help='filetype of the images that are rendered')
-    parser.add_argument('-o', '--output', help = 'Where the picture files and audio are outputted to')
-
-    parser.add_argument('--clear_render_chache', help='program stores the JSON files of already rendered videos so that they can tone down render times.')
 
     return parser.parse_args()
 
