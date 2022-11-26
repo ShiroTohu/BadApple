@@ -154,7 +154,7 @@ class Renderer(PreRender):
 def program_arguments():
     # Argparse
     parser = argparse.ArgumentParser(description = "Takes a Video and outputs it as ASCII text supports file reading and writing.")
-    # parser.add_argument('video', help='either a JSON save file or a video that is a mp4, mov etc... (include video extension or .json)')
+    parser.add_argument('video', help='either a JSON save file or a video that is a mp4, mov etc... (include video extension or .json)')
     parser.add_argument('--fps', type=int, help = 'the fps of the video')
     parser.add_argument("-v", "--verbosity", action="count", default=0, help="increase output verbosity, goes up to 2, default set to 0")
 
@@ -165,14 +165,16 @@ def program_arguments():
 
     parser.add_argument('--clear_render_chache', help='program stores the JSON files of already rendered videos so that they can tone down render times.')
 
-    args = parser.parse_args()
+    return parser.parse_args()
 
 def main(): # I hope this works...
     # TODO merge program arguments into main() lololololol
     just_fix_windows_console()
     pygame.init()
 
-    video = Video('D:\\Mine\\Programming\\BadApple\\test.mp4')
+    args = program_arguments()
+
+    video = Video(args.video)
     Renderer(video)
 
 # for debugging purposes
