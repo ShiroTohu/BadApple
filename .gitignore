@@ -4,3 +4,11 @@ out.txt
 test.py
 .git/
 refactortime.py
+output/
+__pycache__
+cache/
+output2/
+test.mp4
+test2.mp4
+.vscode/
+.README.md.swp

@@ -2,61 +2,62 @@ from PIL import Image
 from tqdm import tqdm
 from colorama import just_fix_windows_console
 
+from source.file_handler import FileHandler
+from source.video_processing import VideoToOutput
+
+import argparse
 import numpy as np
 import pygame
 import os
 import sys
 
-just_fix_windows_console()
-pygame.init()
-gscale1 = "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\|()1{}[]?-_+~<>i!lI;:,\"^`'. "[::-1]
+__author__ = "ShiroTohu"
 
-class Video():
+# Stores information about the output of the Video, this might get a bit complicated
+# TODO implement video processing.py
+class Video(VideoToOutput):
     # initiates the Files class with file variables
-    def __init__(self, directory = "video/", prefix = "out", filetype = ".png", music_path = "video/audio.mp3", fps = 30):
-        self.music_path = music_path
-        self.directory = directory
-        self.prefix = prefix
-        self.filetype = filetype
-        self.fps = fps
-
-        # TODO I rather have audio stuff seperate from the video class, though there is a loophole that stops me from doing so. and it looks messy asf
-        self.images_to_render = self.images_to_render()
-        self.amount_of_frames = len(self.images_to_render)
-        self.time_between_frames = (1000 / self.fps) # records it in miliseconds
-        self.song_length_miliseconds = len(self.images_to_render) / self.fps * 1000
+    def __init__(self, full_file_path):
+        VideoToOutput.__init__(self, full_file_path)
+        # Information about the Music Video.
+        self.frames_to_render = self.get_frames_to_render()
+        self.amount_of_frames = len(self.frames_to_render)
+        self.time_between_frames = (1000 / self.frame_rate) # records it in miliseconds
+        self.song_length_miliseconds = len(self.frames_to_render) / self.frame_rate * 1000
 
     def play_music(self):
-        pygame.mixer.music.load(self.music_path)
+        pygame.mixer.music.load(self.audio_path)
         pygame.mixer.music.set_volume(0.05)
         pygame.mixer.music.play()
 
     def audio_position(self):
         return pygame.mixer.music.get_pos()
 
-    # returns a list of images to render in directory form, that is why it is in the Files class
-    def images_to_render(self) -> list:
-        number_of_frames = len(os.listdir(self.directory))
+    def get_frames_to_render(self) -> list:
+        number_of_frames = len(os.listdir(self.image_path))
         to_render = []
         for number in range(number_of_frames - 2): # TODO please fix!
-            to_render.append(f"{self.directory}{self.prefix}{number + 1}{self.filetype}")
+            to_render.append(f"{self.output_folder}/{self.prefix}{number + 1}.png")
         return to_render
 
 # renders the entire video
 class PreRender():
     # starts the PreRender process
-    def __init__(self, video : Video, coloums = 80, scale = 0.43): # ! to change resolution change the amount of coloums not the scale!
-        self.frames = []
+    # Takes in Video instance as seen above, and the coloums and scale of said video.
+    def __init__(self, video : Video, coloums = 80, scale = 0.43): # ! to change resolution, change the amount of coloums not the scale!
+        self.frames = [] # where the video frames are stored
         self.amount_of_frames = len(self.frames)
         self.coloums = coloums
         self.scale = scale # The scale is used to find out the how many rows there should be in terms of height
         self.video = video
 
-        for image in tqdm(self.video.images_to_render):
+        for image in tqdm(self.video.frames_to_render):
             self.frames.append(self.render_image(image))
 
+        FileHandler.save_video(self.frames, self.video.stripped_file_name, self.coloums, self.scale)
     # renders image as ASCII, copy and pasted from geeks for geeks because too hard to read
     def render_image(self, image_path):
+        gscale1 = "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\|()1{}[]?-_+~<>i!lI;:,\"^`'. "[::-1]
         image = Image.open(image_path).convert('L')
         # store dimensions
         W, H = image.size[0], image.size[1]
@@ -136,16 +137,38 @@ class Renderer(PreRender):
             input("play: ")
             os.system('cls')
             self.video.play_music()
-            next_frame = self.video.time_between_frames
-            for frame in self.frames:
-                while self.video.audio_position() < next_frame:
-                    self.print_frame(frame)
-                next_frame += self.video.time_between_frames
+            self.render_loop()
+
+    # shows the frames in in sync with the music, method added for modularisation
+    def render_loop(self):
+        next_frame = self.video.time_between_frames
+        for frame in self.frames:
+            while self.video.audio_position() < next_frame:
+                self.print_frame(frame)
+            next_frame += self.video.time_between_frames
 
     def print_frame(self, frame):
         sys.stdout.write(f"\033[1;1f{frame}")
         sys.stdout.flush()
 
-if __name__ == "__main__":
-    video = Video(directory = "video/", prefix = "out", filetype = ".png", music_path = "video/audio.mp3", fps = 30) # ! change video settings here
+def program_arguments():
+    # Argparse
+    parser = argparse.ArgumentParser(description = "Takes a Video and outputs it as ASCII text supports file reading and writing.")
+    parser.add_argument('video', help='either a JSON save file or a video that is a mp4, mov etc... (include video extension or .json)')
+    parser.add_argument("-v", "--verbosity", action="count", default=0, help="increase output verbosity, goes up to 2, default set to 0")
+
+    return parser.parse_args()
+
+def main(): # I hope this works...
+    # TODO merge program arguments into main() lololololol
+    just_fix_windows_console()
+    pygame.init()
+
+    args = program_arguments()
+
+    video = Video(args.video)
     Renderer(video)
+
+# for debugging purposes
+if __name__ == "__main__":
+    main()
