@@ -2,8 +2,8 @@ from PIL import Image
 from tqdm import tqdm
 from colorama import just_fix_windows_console
 
-from source.file_handler import FileHandler
-from source.video_processing import VideoToOutput
+from source.cache import CacheHandler
+from source.file import FileToOutput
 
 import argparse
 import numpy as np
@@ -13,26 +13,27 @@ import sys
 
 __author__ = "ShiroTohu"
 
-# Stores information about the output of the Video, this might get a bit complicated
-# TODO implement video processing.py
-class Video(VideoToOutput):
+class Video(FileToOutput):
     # initiates the Files class with file variables
     def __init__(self, full_file_path):
-        VideoToOutput.__init__(self, full_file_path)
+        FileToOutput.__init__(self, full_file_path)
         # Information about the Music Video.
         self.frames_to_render = self.get_frames_to_render()
         self.amount_of_frames = len(self.frames_to_render)
         self.time_between_frames = (1000 / self.frame_rate) # records it in miliseconds
         self.song_length_miliseconds = len(self.frames_to_render) / self.frame_rate * 1000
 
+    # plays the music using the pygame mixer
     def play_music(self):
         pygame.mixer.music.load(self.audio_path)
         pygame.mixer.music.set_volume(0.05)
         pygame.mixer.music.play()
 
+    # returns the position of the audio in miliseconds
     def audio_position(self):
         return pygame.mixer.music.get_pos()
 
+    # returns the amount of frames to render
     def get_frames_to_render(self) -> list:
         number_of_frames = len(os.listdir(self.image_path))
         to_render = []
@@ -40,7 +41,7 @@ class Video(VideoToOutput):
             to_render.append(f"{self.output_folder}/{self.prefix}{number + 1}.png")
         return to_render
 
-# renders the entire video
+# converts images from the video into ASCII text and stores it to bve rendered
 class PreRender():
     # starts the PreRender process
     # Takes in Video instance as seen above, and the coloums and scale of said video.
@@ -51,11 +52,15 @@ class PreRender():
         self.scale = scale # The scale is used to find out the how many rows there should be in terms of height
         self.video = video
 
-        for image in tqdm(self.video.frames_to_render):
-            self.frames.append(self.render_image(image))
+        print(f"{self.video.stripped_file_name} | {CacheHandler.get_cache_folders()}")
+        if self.video.stripped_file_name in CacheHandler.get_cache_folders():
+            self.frames = CacheHandler.load_file(f"D:\Mine\Programming\BadApple\cache\{self.video.stripped_file_name}")["frames"]
+        else:
+            for image in tqdm(self.video.frames_to_render):
+                self.frames.append(self.render_image(image))
+            CacheHandler.save_frames_to_video_folder(self.frames, self.video.stripped_file_name, self.coloums, self.scale)
 
-        FileHandler.save_video(self.frames, self.video.stripped_file_name, self.coloums, self.scale)
-    # renders image as ASCII, copy and pasted from geeks for geeks because too hard to read
+# converts a singular image into ASCII text and returns it as a string
     def render_image(self, image_path):
         gscale1 = "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\|()1{}[]?-_+~<>i!lI;:,\"^`'. "[::-1]
         image = Image.open(image_path).convert('L')
@@ -114,6 +119,7 @@ class PreRender():
 
         return string
 
+# honestly I have no clue so don't touch it.
     @staticmethod
     def get_average_light(image):
         # get image as numpy array
@@ -125,13 +131,14 @@ class PreRender():
         # get average
         return np.average(im.reshape(w*h))
 
+# This class is what allows the PreRendered frames to be displayed onto the terminal
 class Renderer(PreRender):
     def __init__(self, video : Video):
         super().__init__(video)
         self.video = video
         self.main()
 
-    # main render loop YEPCOCK
+# main method that allows everything to work properly, and adds usability to the render loop.
     def main(self):
         while True:
             input("play: ")
@@ -139,7 +146,7 @@ class Renderer(PreRender):
             self.video.play_music()
             self.render_loop()
 
-    # shows the frames in in sync with the music, method added for modularisation
+# shows the frames in in sync with the music, method added for modularisation
     def render_loop(self):
         next_frame = self.video.time_between_frames
         for frame in self.frames:
@@ -147,10 +154,12 @@ class Renderer(PreRender):
                 self.print_frame(frame)
             next_frame += self.video.time_between_frames
 
+# prints a singular frame
     def print_frame(self, frame):
         sys.stdout.write(f"\033[1;1f{frame}")
         sys.stdout.flush()
 
+# The program arguments
 def program_arguments():
     # Argparse
     parser = argparse.ArgumentParser(description = "Takes a Video and outputs it as ASCII text supports file reading and writing.")

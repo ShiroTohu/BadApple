@@ -9,6 +9,7 @@ from pprint import pprint
 
 __author__ = "ShiroTohu"
 
+# contains metadata and directory information from the file parsed
 class File:
     def __init__ (self, full_file_path):
         self.full_file_path = full_file_path
@@ -45,10 +46,9 @@ class File:
     def get_filetype(file_name):
         return '.' + file_name.split('.')[-1]
 
-# Uses FFmpeg to convert the video into images that is then outputted to the output_folder
-class VideoToOutput(File):
-    # named argument file instead of video so to not confuse with the Video class
-    # takes in the full file path to specified video.
+# strips the images and audio from the video and outputs it to the "output" folder
+class FileToOutput(File):
+    # the name of the output images and audio are set here
     def __init__(self, full_file_path):
         File.__init__(self, full_file_path)
         self.output_folder = "../output"
@@ -63,18 +63,16 @@ class VideoToOutput(File):
 
         self.convert_video()
 
+# strips the images and audio from the video into the "output" folder
     def convert_video(self):
-        # if there is already a video in the output folder it will then delete the folder to make space for the new images and audio to pass thorugh.
-
         if os.path.exists(self.output_folder):
             rmtree(self.output_folder)
         os.mkdir(self.output_folder)
 
-        #! there might be a better way of doing this, but python-ffmpeg is just a wrapper so this is just as efficient.
         os.system(f"ffmpeg -i {self.full_file_path} {self.image_path}/{self.image_name}")
         os.system(f"ffmpeg -i {self.full_file_path} {self.audio_path}")
 
 if __name__ == "__main__":
-    x = VideoToOutput("D:\\Mine\\Programming\\BadApple\\test.mp4")
+    x = FileToOutput("D:\\Mine\\Programming\\BadApple\\test.mp4")
     metadata = x.get_metadata()
     pprint(metadata)
