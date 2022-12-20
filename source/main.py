@@ -13,6 +13,7 @@ import sys
 
 __author__ = "ShiroTohu"
 
+# Use this class as it single inherits classes down the line that are needed
 class Video(FileToOutput):
     # initiates the Files class with file variables
     def __init__(self, full_file_path):
@@ -43,8 +44,7 @@ class Video(FileToOutput):
 
 # converts images from the video into ASCII text and stores it to bve rendered
 class PreRender():
-    # starts the PreRender process
-    # Takes in Video instance as seen above, and the coloums and scale of said video.
+
     def __init__(self, video : Video, coloums = 80, scale = 0.43): # ! to change resolution, change the amount of coloums not the scale!
         self.frames = [] # where the video frames are stored
         self.amount_of_frames = len(self.frames)
@@ -58,7 +58,7 @@ class PreRender():
         else:
             for image in tqdm(self.video.frames_to_render):
                 self.frames.append(self.render_image(image))
-            CacheHandler.save_frames_to_video_folder(self.frames, self.video.stripped_file_name, self.coloums, self.scale)
+            CacheHandler.save_rendered_information(self.frames, self.video.stripped_file_name, self.coloums, self.scale)
 
 # converts a singular image into ASCII text and returns it as a string
     def render_image(self, image_path):

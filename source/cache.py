@@ -4,10 +4,10 @@ import os
 __author__ = "ShiroTohu"
 
 #! cache/{filename}/...
-#TODO: The cache is creaating a file relative to the file it has ran of off
+#TODO: The cache is creaating a file relative to the file it has run of off
 class CacheHandler:
     # creates a json file with the ASCII frames an dother relevant information.
-    def store_rendered_information(frames: list, name_of_video: str, coloums: int, scale: int) -> None:
+    def save_rendered_information(frames: list, name_of_video: str, coloums: int, scale: int) -> None:
         CacheHandler.create_cache_folder()
 
         # saves video information to frames.json
