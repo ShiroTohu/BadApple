@@ -13,7 +13,7 @@ replace ```[video_path]``` with the path of the video.
 - [x] autoconversion to ASCII text
 - [x] mp4 input program arguments
 - [x] JSON save feature
-- [ ] JSON load feature
+- [x] JSON load feature
 - [ ] settings
 
 ## Package Requirements
